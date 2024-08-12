@@ -1,0 +1,118 @@
+SELECT custno
+FROM PURCHASE
+WHERE prono = (SELECT product_no
+               FROM PRODUCT
+               WHERE description = 'Laptop Adapter')
+  AND EXTRACT(MONTH FROM orderdate) = 1
+  AND EXTRACT(YEAR FROM orderdate) = 2016;
+
+
+SELECT name
+FROM CUSTOMER
+WHERE cust_no IN (SELECT custno
+                  FROM PURCHASE
+                  WHERE prono = 'P00002');
+
+
+SELECT DISTINCT custno
+FROM PURCHASE
+WHERE prono IN (SELECT product_no
+                FROM PRODUCT
+                WHERE price > 1600);
+
+
+SELECT name
+FROM CUSTOMER
+WHERE cust_no IN (SELECT custno
+                  FROM PURCHASE
+                  WHERE prono IN (SELECT product_no
+                                  FROM PRODUCT
+                                  WHERE price > 1500)
+                    AND EXTRACT(MONTH FROM orderdate) = 1
+                    AND EXTRACT(YEAR FROM orderdate) = 2016);
+
+
+SELECT DISTINCT custno
+FROM PURCHASE
+WHERE prono IN (SELECT product_no
+                FROM PRODUCT
+                WHERE price < 1600);
+
+
+SELECT custno
+FROM PURCHASE
+WHERE quantity > (SELECT MAX(quantity)
+                  FROM PURCHASE
+                  WHERE custno = 'C00002');
+
+
+SELECT name
+FROM CUSTOMER
+WHERE cust_no NOT IN (SELECT DISTINCT custno
+                      FROM PURCHASE);
+
+
+SELECT DISTINCT name
+FROM CUSTOMER
+WHERE cust_no IN (SELECT custno
+                  FROM PURCHASE
+                  WHERE prono IN (SELECT product_no
+                                  FROM PRODUCT
+                                  WHERE company = 'Wipro'));
+
+
+
+SELECT A.custno AS custno1, B.custno AS custno2
+FROM PURCHASE A, PURCHASE B
+WHERE A.prono = B.prono
+  AND A.custno != B.custno
+  AND A.quantity < B.quantity;
+
+
+
+SELECT A.name AS custname1, B.name AS custname2
+FROM CUSTOMER A, CUSTOMER B
+WHERE A.cust_no IN (SELECT custno
+                    FROM PURCHASE
+                    WHERE prono IN (SELECT product_no
+                                    FROM PRODUCT
+                                    WHERE price < 1600))
+  AND B.cust_no IN (SELECT custno
+                    FROM PURCHASE
+                    WHERE prono IN (SELECT product_no
+                                    FROM PRODUCT
+                                    WHERE price < 1600))
+  AND A.cust_no != B.cust_no;
+
+
+SELECT prono
+FROM PURCHASE
+GROUP BY prono
+HAVING COUNT(DISTINCT custno) > 1;
+
+
+SELECT name
+FROM CUSTOMER
+WHERE cust_no IN (SELECT custno
+                  FROM PURCHASE
+                  WHERE prono = 'P00002');
+
+
+SELECT name
+FROM CUSTOMER
+WHERE cust_no NOT IN (SELECT custno
+                      FROM PURCHASE
+                      WHERE prono = 'P00002');
+
+
+SELECT DISTINCT name
+FROM CUSTOMER
+WHERE cust_no IN (SELECT custno
+                  FROM PURCHASE
+                  WHERE prono IN (SELECT prono
+                                  FROM PURCHASE
+                                  WHERE custno = 'C00002')
+                  GROUP BY custno
+                  HAVING COUNT(DISTINCT prono) >= (SELECT COUNT(DISTINCT prono)
+                                                  FROM PURCHASE
+                                                  WHERE custno = 'C00002'));
