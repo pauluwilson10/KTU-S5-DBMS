@@ -1,0 +1,25 @@
+#CREATE FUNCTION
+CREATE OR REPLACE FUNCTION dc(account_balance NUMBER)
+RETURN VARCHAR2
+IS
+    v_category VARCHAR2(10);
+BEGIN
+    IF account_balance > 50000 THEN
+        v_category := 'Platinum';
+    ELSIF account_balance > 10000 THEN
+        v_category := 'Gold';
+    ELSE
+        v_category := 'Silver';
+    END IF;
+    RETURN v_category;
+END;
+/
+
+Query to Retrieve Customer Details Along with Their Category
+SELECT 
+    c.customer_id, 
+    c.customer_name, 
+    c.account_balance, 
+    dc(c.account_balance) AS customer_category
+FROM 
+    customers c;
