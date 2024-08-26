@@ -1,0 +1,31 @@
+DECLARE
+    v_total_marks NUMBER := 0;
+    v_count NUMBER := 0;
+    v_avg_mark NUMBER;
+    v_today DATE;
+    v_day_of_week VARCHAR2(10);
+BEGIN
+    -- Cursor to select marks of students
+    FOR rec IN (SELECT marks FROM students) LOOP
+        v_total_marks := v_total_marks + rec.marks;
+        v_count := v_count + 1;
+        DBMS_OUTPUT.PUT_LINE('Mark: ' || rec.marks);
+    END LOOP;
+    
+    -- Calculate the average mark
+    IF v_count > 0 THEN
+        v_avg_mark := v_total_marks / v_count;
+        DBMS_OUTPUT.PUT_LINE('Average Mark: ' || v_avg_mark);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('No student records found.');
+    END IF;
+
+    -- Print a message if the average is less than 40
+    IF v_avg_mark < 40 THEN
+        DBMS_OUTPUT.PUT_LINE('Need improvement');
+    END IF;
+
+    -- Get today's date and the day of the week
+    v_today := SYSDATE;
+    v_day_of_week := TO_CHAR(v_today, 'Day');
+    DBMS_OUTPUT.PUT_LINE('Date: ' ||
