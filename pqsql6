@@ -1,0 +1,43 @@
+DECLARE
+    v_account_number NUMBER;
+    v_balance NUMBER;
+    v_amount_to_debit NUMBER := 200;
+    v_min_balance NUMBER := 500;
+    v_new_balance NUMBER;
+    
+    -- Custom exception for insufficient balance
+    insufficient_balance EXCEPTION;
+    
+BEGIN
+    -- Prompt the user for the account number
+    v_account_number := &v_account_number;  -- Replace &v_account_number with a real input method in production
+
+    -- Fetch the current balance of the specified account
+    SELECT balance INTO v_balance
+    FROM accounts
+    WHERE account_number = v_account_number;
+    
+    -- Check if the account has enough balance after debiting
+    v_new_balance := v_balance - v_amount_to_debit;
+    
+    IF v_new_balance < v_min_balance THEN
+        RAISE insufficient_balance;
+    ELSE
+        -- Perform the debit operation
+        UPDATE accounts
+        SET balance = v_new_balance
+        WHERE account_number = v_account_number;
+        
+        DBMS_OUTPUT.PUT_LINE('Amount debited: ' || v_amount_to_debit);
+        DBMS_OUTPUT.PUT_LINE('New Balance: ' || v_new_balance);
+    END IF;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Error: Account not found.');
+    WHEN insufficient_balance THEN
+        DBMS_OUTPUT.PUT_LINE('Error: Insufficient balance. Minimum balance of ' || v_min_balance || ' is required.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An unexpected error occurred: ' || SQLERRM);
+END;
+/
