@@ -1,0 +1,24 @@
+#Experiment 6
+CREATE TABLE accounts(acc_num NUMBER(5) NOT NULL PRIMARY KEY,balance NUMBER);
+insert into accounts values(12345,7645);
+
+#Experiment 7
+
+create table students(SID NUMBER(3) not null primary key,NAME varchar(25),marks number(2))
+
+insert into students values(123,'Rakesh',87);
+insert into students values(124,'Rahul',97);
+insert into students values(125,'rowdy',67);
+insert into students values(126,'raganan',27);
+insert into students values(127,'ruizz',19);
+
+
+#Experiment 8
+CREATE table PLSQLCUSTOMER(customer_id VARCHAR(5),customer_name VARCHAR(10), account_balance NUMBER );
+
+INSERT INTO PLSQLCUSTOMER  VALUES (1, 'Alice', 60000);
+INSERT INTO PLSQLCUSTOMER  VALUES (2, 'Bob', 20000);
+INSERT INTO PLSQLCUSTOMER  VALUES (3, 'Charlie', 8000);
+
+
+SELECT customer_id,customer_name,account_balance,dc(account_balance) AS customer_category FROM plsqlcustomer;
